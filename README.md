@@ -97,25 +97,51 @@ graph TD
 ## ⚙️ Installation & Setup
 
 ### Prerequisites
-*   Java JDK 21+
-*   Apache Tomcat 9.0+
-*   MySQL 8.0+
+*   **Java JDK 21+**: Ensure `JAVA_HOME` is set.
+*   **MySQL 8.0+**: For persistent data storage.
+*   **Maven 3.8+**: For building the project.
 
 ### Step 1: Database Initialization
-Execute the provided SQL schema to set up the environment:
-```sql
-CREATE DATABASE userdb;
--- Import from sql/schema.sql
+1.  Open your MySQL terminal or Workbench.
+2.  Run the following commands:
+    ```sql
+    CREATE DATABASE userdb;
+    USE userdb;
+    -- Execute the contents of 'sql/schema.sql' found in this repository.
+    ```
+
+### Step 2: Configure Database Connection
+Update the `DBConnection.java` file with your local MySQL credentials:
+```java
+// Path: src/com/app/util/DBConnection.java
+private static final String URL = "jdbc:mysql://localhost:3306/userdb";
+private static final String USER = "your_username";
+private static final String PASSWORD = "your_password";
 ```
 
-### Step 2: Configuration
-Update your database credentials in `src/com/app/util/DBConnection.java`.
+### Step 3: Apache Tomcat Setup & Deployment
+If you don't have Tomcat installed, follow these steps:
 
-### Step 3: Build & Deploy
-```bash
-mvn clean package
-# Copy target/SmartUserManagementSystem.war to tomcat/webapps
-```
+1.  **Download**: Visit the [Apache Tomcat 9 Downloads](https://tomcat.apache.org/download-90.cgi) page.
+2.  **Select Package**: Choose the "64-bit Windows zip" or appropriate installer for your OS.
+3.  **Extract**: Unzip the downloaded file to a preferred location (e.g., `C:\apache-tomcat-9.0.x`).
+4.  **Set CATALINA_HOME**: Add an environment variable `CATALINA_HOME` pointing to your Tomcat root directory.
+
+#### Deploying the Application:
+1.  **Build the project** using Maven:
+    ```bash
+    mvn clean package
+    ```
+2.  **Locate the Artifact**: After building, a `SmartUserManagementSystem.war` file will be created in the `target/` directory.
+3.  **Deploy**: 
+    *   Copy the `SmartUserManagementSystem.war` file.
+    *   Paste it into the `webapps/` folder of your Apache Tomcat directory.
+4.  **Start Tomcat**:
+    *   Navigate to `tomcat/bin/` and run `startup.bat` (Windows) or `startup.sh` (Linux).
+5.  **Access**: Open your browser and go to:
+    `http://localhost:8080/SmartUserManagementSystem/`
+
+---
 
 ---
 
