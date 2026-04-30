@@ -7,10 +7,8 @@ import java.io.IOException;
 import com.app.dao.UserDao;
 import com.app.model.User;
 
-@WebServlet("/register")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2,
-                 maxFileSize = 1024 * 1024 * 10,
-                 maxRequestSize = 1024 * 1024 * 50)
+import com.app.util.FileUtil;
+
 public class RegisterServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
@@ -40,19 +38,14 @@ public class RegisterServlet extends HttpServlet {
         u.setFullName(fullName.trim());
         u.setRole("USER");
 
-        // Handle Image Upload
-        try {
-            javax.servlet.http.Part filePart = req.getPart("profileImage");
-            if (filePart != null && filePart.getSize() > 0) {
-                String fileName = "reg_" + System.currentTimeMillis() + "_" + username.trim() + ".jpg";
-                String uploadPath = getServletContext().getRealPath("/uploads");
-                java.io.File uploadDir = new java.io.File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
-                filePart.write(uploadPath + java.io.File.separator + fileName);
-                u.setProfileImage("uploads/" + fileName);
+        // Handle Image Upload using FileUtil
+        Part filePart = req.getPart("profileImage");
+        if (filePart != null && filePart.getSize() > 0) {
+            String uploadPath = getServletContext().getRealPath("/uploads");
+            String filePath = FileUtil.saveFile(filePart, uploadPath);
+            if (filePath != null) {
+                u.setProfileImage(filePath);
             }
-        } catch (Exception e) {
-            // Ignore upload errors for now
         }
 
         UserDao dao = new UserDao();

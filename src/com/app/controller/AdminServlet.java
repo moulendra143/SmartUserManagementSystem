@@ -6,7 +6,6 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import com.app.dao.UserDao;
 
-@WebServlet("/admin-dashboard")
 public class AdminServlet extends HttpServlet {
     private UserDao userDao = new UserDao();
 

@@ -1,7 +1,6 @@
 package com.app.filter;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,7 +17,9 @@ public class AuthFilter implements Filter {
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
         // Define public pages
-        boolean isPublicPage = path.equals("/jsp/auth/login.jsp") || 
+        boolean isPublicPage = path.equals("/") ||
+                               path.equals("/index.jsp") ||
+                               path.equals("/jsp/auth/login.jsp") || 
                                path.equals("/jsp/auth/register.jsp") || 
                                path.equals("/login") || 
                                path.equals("/register") ||

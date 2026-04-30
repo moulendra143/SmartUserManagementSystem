@@ -7,7 +7,6 @@ import java.io.IOException;
 import com.app.dao.UserDao;
 import com.app.model.User;
 
-@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
@@ -24,9 +23,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
 
             if ("ADMIN".equals(user.getRole())) {
-                res.sendRedirect("jsp/admin/admin-dashboard.jsp");
+                res.sendRedirect("admin-dashboard?loginSuccess=true");
             } else {
-                res.sendRedirect("jsp/user/dashboard.jsp");
+                res.sendRedirect("jsp/user/dashboard.jsp?loginSuccess=true");
             }
         } else {
             req.setAttribute("error", "Invalid username or password");

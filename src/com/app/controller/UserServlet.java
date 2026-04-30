@@ -10,10 +10,8 @@ import java.util.List;
 import com.app.dao.UserDao;
 import com.app.model.User;
 
-@WebServlet("/user-management")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-                 maxFileSize = 1024 * 1024 * 10,      // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
+import com.app.util.FileUtil;
+
 public class UserServlet extends HttpServlet {
     
     private UserDao userDao = new UserDao();
@@ -113,20 +111,14 @@ public class UserServlet extends HttpServlet {
         user.setFullName(fullName);
         user.setRole(role);
 
-        // Handle Image Upload
+        // Handle Image Upload using FileUtil
         Part filePart = req.getPart("profileImage");
         if (filePart != null && filePart.getSize() > 0) {
-            String fileName = "profile_" + id + "_" + System.currentTimeMillis() + ".jpg";
             String uploadPath = getServletContext().getRealPath("/uploads");
-            if (uploadPath == null) {
-                // Fallback for some server environments
-                uploadPath = System.getProperty("java.io.tmpdir");
+            String filePath = FileUtil.saveFile(filePart, uploadPath);
+            if (filePath != null) {
+                user.setProfileImage(filePath);
             }
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-            
-            filePart.write(uploadPath + File.separator + fileName);
-            user.setProfileImage("uploads/" + fileName);
         }
 
 

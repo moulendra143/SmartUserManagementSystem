@@ -130,6 +130,19 @@ public class UserDao {
         return false;
     }
 
+    public boolean updatePassword(int id, String newPassword) {
+        String sql = "UPDATE users SET password=? WHERE id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id=?";
         try (Connection con = DBConnection.getConnection();
